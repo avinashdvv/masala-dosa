@@ -12,6 +12,10 @@ Install Masala Dosa with npm
   yarn add masala-dosa
 ```
 
+## TODOs
+- [] Beautify readme.md
+- [] Through warning if same kind npm package installed again
+
 ## License
 
 [MIT](https://github.com/avinashdvv/masala-dosa/blob/master/LICENSE.md)
