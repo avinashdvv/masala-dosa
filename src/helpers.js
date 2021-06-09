@@ -1,8 +1,9 @@
 const fs = require("fs");
 const RegClient = require("npm-registry-client");
 const logger = require("./logger");
-const plugins = require("./plugins");
-const { gitFetch } = require("./utils");
+const mdx = require("./plugins/mdx");
+const { gitFetch } = require("./utils/fetch");
+const { getPackageURL, getGitURL } = require("./utils/urls");
 
 const client = new RegClient();
 const params = { timeout: 5000 };
@@ -23,16 +24,11 @@ const getMetaData = (dependency) => {
       }
 
       // id, _rev, name, description, dist-tags, versions, readme, maintainers, time, author, license, readmeFilename, repository, homepage, bugs, users, _etag, _lastModified
-      const gitURL = data.repository.url
-        .replace("git+", "")
-        .replace(".git", "")
-        .replace("git:", "https:")
-        .replace("ssh", "https");
+      const gitURL = getPackageURL(data.repository.url);
 
       try {
-        const gitAPIURL = gitURL
-          .replace("github.com", "api.github.com/repos")
-          .replace("git@github", "api.github");
+        const gitAPIURL = getGitURL(gitURL);
+
         const gitRes = await gitFetch(gitAPIURL).then(safeParseJSON);
 
         const successData = {
@@ -73,24 +69,23 @@ function getDependencyMD({
   homepage,
   bugs,
 }) {
-  // Writing join is intentional to disable the few plugins
+  // Writing join is intentional to disable the few mdx
   return [
-    plugins.name(name),
-    plugins.description(description),
-    plugins.keywords(keywords),
-    plugins.repository(repository),
-    plugins.homepage(homepage),
+    mdx.name(name),
+    mdx.description(description),
+    mdx.keywords(keywords),
+    mdx.repository(repository),
+    mdx.homepage(homepage),
     "\n \n",
   ].join("\n");
 }
 
-
 async function safeParseJSON(response) {
   const body = await response.text();
   try {
-      return JSON.parse(body);
+    return JSON.parse(body);
   } catch (err) {
-      return { };
+    return {};
   }
 }
 

@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  release:
+    name: Release
+    runs-on: self-hosted
+    timeout-minutes: 20
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Use Node v14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.17
+
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      - name: Setup Cache & Install Dependencies
+        uses: bahmutov/npm-install@v1
+        with:
+          install-command: yarn --frozen-lockfile
+
+      - name: Run Tests
+        run: yarn start
+
+      - name: Create Release Pull Request & Publish packages
+        id: changesets
+        uses: changesets/action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
+        with:
+          publish: yarn release
+          commit: "build(masala-dosa): update version"
+          title: "build(masala-dosa): update version"
