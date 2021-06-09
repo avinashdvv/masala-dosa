@@ -1,7 +1,4 @@
 const fs = require("fs");
-const fetch = require("node-fetch");
-const secret = require("../secrets");
-const logger = require("./logger");
 
 const writeToFile = (fileName, fileData) => {
   return new Promise((resolve, reject) => {
@@ -17,15 +14,6 @@ const writeToFile = (fileName, fileData) => {
   });
 };
 
-const gitFetch = async (url) => {
-  return fetch(url, {
-    headers: {
-      authorization: `token ${secret.GIT_TOKEN}`,
-    },
-  });
-};
-
 module.exports = {
   writeToFile,
-  gitFetch,
 };
