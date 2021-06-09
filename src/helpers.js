@@ -16,7 +16,7 @@ const getMetaData = (dependency) => {
 
   return new Promise((resolve, reject) => {
     const registryUrl = `https://registry.npmjs.org/${dependency}`;
-    client.get(registryUrl, params, async function (error, data, raw, res) {
+    client.get(registryUrl, params, async function(error, data, raw, res) {
       if (error) {
         reject(error);
 
@@ -73,10 +73,13 @@ function getDependencyMD({
   return [
     mdx.name(name),
     mdx.description(description),
+    "\n",
     mdx.keywords(keywords),
     mdx.repository(repository),
     mdx.homepage(homepage),
-    "\n \n",
+    `
+      \n \n
+    `,
   ].join("\n");
 }
 
