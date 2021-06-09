@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/avinashdvv/masala-dosa.git"
+  },
   "scripts": {
     "start": "node test.js",
     "release": "changeset publish"
